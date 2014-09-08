@@ -31,6 +31,6 @@ test_that("pbs workflow", {
   options(experimentr.email="rich.fitzjohn@gmail.com")
   devtools::load_all("../../")
   dir.create("pbs")
-  files <- make_pbs_file("trial", "testing", 1:100, path="pbs")
+  files <- make_pbs_file("trial", "testing", 1:100, path="pbs", queue="express")
   qsub(files)
 })

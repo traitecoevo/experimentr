@@ -12,7 +12,7 @@
 #PBS -m abe
 
 ### Specify queue
-#PBS -q normal
+#PBS -q {{{queue}}}
 
 ### Max running time
 #PBS -l walltime={{{walltime}}}
