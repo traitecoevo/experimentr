@@ -52,7 +52,6 @@ save_metadata <- function(experiment, task, id) {
   if ("tree" %in% loadedNamespaces()) {
     dat$tree=tree:::git_sha()
   }
-  dir.create(dirname(filename), FALSE, recursive=TRUE)
   saveRDS(dat, filename)
 }
 

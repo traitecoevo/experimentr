@@ -20,23 +20,25 @@ setup_experiment_pars <- function(pars=NULL) {
 ##' every task in this experiment
 ##' @author Rich FitzJohn
 ##' @export
-setup_experiment <- function(path, pars, packages=NULL, scripts=NULL) {
+setup_experiment <- function(path, pars, packages=NULL, scripts=NULL,
+                             overwrite=FALSE, purge=FALSE) {
   experiments_file <- experiments_filename()
   output_path <- output_path(path)
   parameters_file <- parameters_csv_name(path)
 
-  if (file.exists(output_path)) {
-    stop("path already exists")
+  if (overwrite) {
+    remove_experiment(path, purge)
   }
 
   if (file.exists(experiments_file)) {
     yml <- yaml::yaml.load_file(experiments_file)
-    if (path %in% names(yml)) {
-      stop("experiment already within file")
-    }
+    stop("experiment already within file")
   }
 
-  dir.create(output_path)
+  if (!overwrite && file.exists(output_path)) {
+    stop("path already exists")
+  }
+  dir.create(output_path, FALSE)
   write.csv(setup_experiment_pars(pars), parameters_file, row.names=FALSE)
 
   ret <- list(list(packages=packages,
@@ -51,6 +53,25 @@ setup_experiment <- function(path, pars, packages=NULL, scripts=NULL) {
   }
   str_new <- strsplit(yaml::as.yaml(ret), "\n")[[1]]
   writeLines(c(str, "\n", str_new), experiments_file)
+}
+
+remove_experiment <- function(experiment, purge=FALSE) {
+  experiments_file <- experiments_filename()
+  if (file.exists(experiments_file)) {
+    yml <- yaml::yaml.load_file(experiments_file)
+    if (experiment %in% names(yml)) {
+      yml <- yml[names(yml) != experiment]
+      if (length(yml) == 0) {
+        file.remove(experiments_file)
+      } else {
+        writeLines(yaml::as.yaml(yml), experiments_file)
+      }
+    }
+  }
+  if (purge) {
+    file_remove_if_exists(output_path(experiment))
+    file_remove_if_exists(parameters_csv_name(experiment))
+  }
 }
 
 ##' Create directories needed for experimentr
