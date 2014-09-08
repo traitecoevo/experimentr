@@ -21,14 +21,18 @@ get_task <- function(task, yml) {
   if (!(task %in% names(yml$tasks))) {
     stop("Did not find task within experiment")
   }
-  yml$tasks[[task]]
+  ret <- yml$tasks[[task]]
+  ret$path <- task
+  ret
 }
 
 get_experiment <- function(experiment, yml) {
   if (!(experiment %in% names(yml))) {
     stop("Did not find experiment within overall data")
   }
-  yml[[experiment]]
+  ret <- yml[[experiment]]
+  ret$path <- experiment
+  ret
 }
 
 git_info <- function() {
