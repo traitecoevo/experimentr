@@ -31,4 +31,4 @@
 module load R
 
 #PBS -N {{{experiment}}}__{{{task}}}__{{{id}}}
-./run_experiment.R --experiment {{{EXPERIMENT}}} --task {{{task}}} --id {{{id}}}
+./run_experiment.R --experiment {{{experiment}}} --task {{{task}}} --id {{{id}}}

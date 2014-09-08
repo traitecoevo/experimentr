@@ -23,14 +23,13 @@ make_pbs_file <- function(experiment, task, id,
     stop("experiment and task must be scalar")
   }
 
-  f <- function(id) {
+  f <- function(experiment, task, id, walltime, email) {
     str <- whisker::whisker.render(template)
     filename <- file.path(path, pbs_filename(experiment, task, id))
     writeLines(str, filename)
     filename
   }
-
-  invisible(sapply(id, f))
+  invisible(sapply(id, function(x) f(experiment, task, x, walltime, email)))
 }
 
 ##' Copy a helper script that runs a parameter set from the experiment.
