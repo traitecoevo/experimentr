@@ -9,8 +9,18 @@ setup_experiment_pars <- function(pars=NULL) {
   data.frame(id=id, pars, stringsAsFactors=FALSE)
 }
 
-setup_experiment <- function(path, pars, name=basename(path),
-                             packages=NULL, scripts=NULL) {
+##' Set up an experiment
+##' @title Set up an experiment
+##' @param path Path within \code{output/} that things will be stored
+##' in.  Also the name of the key in the yml.
+##' @param pars data.frame of parameters
+##' @param packages Optional character vector of packages to load for
+##' every task in this experiment
+##' @param scripts Optional characte vector of scripts to source for
+##' every task in this experiment
+##' @author Rich FitzJohn
+##' @export
+setup_experiment <- function(path, pars, packages=NULL, scripts=NULL) {
   experiments_file <- experiments_filename()
   output_path <- output_path(path)
   parameters_file <- parameters_csv_name(path)
@@ -41,4 +51,13 @@ setup_experiment <- function(path, pars, name=basename(path),
   }
   str_new <- strsplit(yaml::as.yaml(ret), "\n")[[1]]
   writeLines(c(str, "\n", str_new), experiments_file)
+}
+
+##' Create directories needed for experimentr
+##' @title Create directories needed for experimentr
+##' @export
+create_dirs <- function() {
+  dir.create("experiments", FALSE)
+  dir.create("experiments/parameters", FALSE)
+  dir.create("experiments/output", FALSE)
 }
