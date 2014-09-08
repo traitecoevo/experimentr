@@ -74,6 +74,35 @@ remove_experiment <- function(experiment, purge=FALSE) {
   }
 }
 
+add_task <- function(experiment, task, function_name,
+                     common_parameters=NULL,
+                     packages=NULL, scripts=NULL,
+                     overwrite=FALSE, purge=FALSE,
+                     depends=NULL) {
+  experiments_file <- experiments_filename()
+  yml <- yaml::yaml.load_file(experiments_file)
+  exp <- get_experiment(experiment, yml)
+  path <- output_task_path(experiment, task)
+  if (task %in% names(exp$tasks)) {
+    if (!overwrite) {
+      stop("task already exists")
+    }
+    if (purge) {
+      file_remove_if_exists(path)
+    }
+  }
+  dir.create(path, FALSE)
+
+  ret <- list(function_name=function_name)
+  ## No checking here:
+  ret$common_parameters <- common_parameters # named
+  ret$packages <- packages # character
+  ret$scripts <- scripts # character
+  ret$depends <- depends # needs care
+  yml[[experiment]]$tasks[[task]] <- ret
+  writeLines(yaml::as.yaml(yml), experiments_file)
+}
+
 ##' Create directories needed for experimentr
 ##' @title Create directories needed for experimentr
 ##' @export

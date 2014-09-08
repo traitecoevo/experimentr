@@ -31,22 +31,19 @@ main <- function(args=NULL, dry_run=FALSE) {
   message("Task:       ", task)
   message("Id:         ", id)
 
-  dat_all <- yaml::yaml.load_file(experiments_filename())
-  dat <- get_experiment(experiment, dat_all)
-  dat_task <- get_task(task, dat)
+  dat <- yaml::yaml.load_file(experiments_filename())
+  pars <- load_task_info(experiment, task, id, dat)
+  env <- create_environment(experiment, task, dat)
 
-  path <- dat$path
-  pars <- load_parameters(path, id, dat_task)
-  env <- create_environment(dat, dat_task)
   if (!dry_run) {
-    save_metadata(path, task, id)
-    run(dat_task, pars, env)
+    save_metadata(experiment, task, id)
+    run(pars, env)
   }
 }
 
-run <- function(task, pars, env) {
+run <- function(pars, env) {
   message("--- Starting at ", Sys.time())
-  f <- get(task[["function"]], env, mode="function")
+  f <- get(pars$function_name, env, mode="function")
   nms <- names(formals(f))
   ## TODO: Process prerequisites here to allow using filenames from
   ## previous versions.

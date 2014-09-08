@@ -9,16 +9,19 @@ test_that("Simple dry run", {
 
   pars <- expand.grid(a=1:10, b=runif(10))
   setup_experiment("trial", pars, scripts="simulation.R",
-                   packages=c("ape", "MASS"))
-
-  ## Manually add a task:
-  yml <- yaml::yaml.load_file(experiments_filename())
-  yml$trial$tasks <- list(testing=list("function"="target_fn"))
-  writeLines(yaml::as.yaml(yml), experiments_filename())
+                   packages=c("ape", "MASS"), overwrite=TRUE)
+  add_task("trial", "testing", "target_fn")
+  add_task("trial", "reprocess", "reprocess_fn",
+           depends=list(dat="testing"))
 
   for (i in 1:10) {
     main(list(experiment="trial", task="testing", id=i))
     expect_that(file.exists(output_filename("trial", "testing", i)), is_true())
+  }
+
+  for (i in 1:10) {
+    main(list(experiment="trial", task="reprocess", id=i))
+    expect_that(file.exists(output_filename("trial", "reprocess", i)), is_true())
   }
 })
 

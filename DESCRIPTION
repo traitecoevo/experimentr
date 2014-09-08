@@ -1,9 +1,13 @@
 Package: experimentr
-Title: What the package does (short line)
+Title: Run computational experiments
 Version: 0.1
-Authors@R: "First Last <first.last@example.com> [aut, cre]"
-Description: What the package does (paragraph)
+Authors@R: "Rich FitzJohn <rich.fitzjohn@gmail.com> [aut, cre]"
+Description: Suppose you want to run some long-running calculation on
+  each of a set of parameters.  That's what this is for.  See
+  README.md for more information.
 Depends:
     R (>= 3.1.0)
-License: What license is it under?
+License: BSD_2_clause + file LICENSE
 LazyData: true
+Imports: optparse, whisker, yaml
+Suggests: testthat
