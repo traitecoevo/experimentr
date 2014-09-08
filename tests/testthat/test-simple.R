@@ -1,3 +1,8 @@
+if (interactive()) {
+  devtools::load_all("../../")
+  library(testthat)
+}
+
 test_that("Simple dry run", {
   unlink("experiments", recursive=TRUE)
   experimentr::create_dirs()
@@ -15,4 +20,14 @@ test_that("Simple dry run", {
     main(list(experiment="trial", task="testing", id=i))
     expect_that(file.exists(output_filename("trial", "testing", i)), is_true())
   }
+})
+
+test_that("pbs workflow", {
+  unlink("pbs", recursive=TRUE)
+  copy_runner()
+  options(experimentr.email="rich.fitzjohn@gmail.com")
+  devtools::load_all("../../")
+  dir.create("pbs")
+  files <- make_pbs_file("trial", "testing", 1:100, path="pbs")
+  qsub(files)
 })

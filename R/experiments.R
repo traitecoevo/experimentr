@@ -107,5 +107,5 @@ metadata_filename <- function(experiment, task, id) {
             paste0(id, "_meta.rds"))
 }
 pbs_filename <- function(experiment, task, id) {
-  sprintf("%s__%s__%d.pbs", experiemnt, task, id)
+  sprintf("%s__%s__%d.pbs", experiment, task, id)
 }
