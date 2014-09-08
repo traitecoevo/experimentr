@@ -12,7 +12,8 @@
 ##' @export
 make_pbs_file <- function(experiment, task, id,
                           email=getOption("experimentr.email"),
-                          walltime="48:00", template=NULL,
+                          walltime="48:00", queue="normal",
+                          template=NULL,
                           path=".") {
   if (is.null(template)) {
     template <- readLines(system.file("pbs.whisker",
@@ -23,14 +24,13 @@ make_pbs_file <- function(experiment, task, id,
     stop("experiment and task must be scalar")
   }
 
-  f <- function(id) {
+  f <- function(experiment, task, id, walltime, email, queue) {
     str <- whisker::whisker.render(template)
     filename <- file.path(path, pbs_filename(experiment, task, id))
     writeLines(str, filename)
     filename
   }
-
-  invisible(sapply(id, f))
+  invisible(sapply(id, function(x) f(experiment, task, x, walltime, email, queue)))
 }
 
 ##' Copy a helper script that runs a parameter set from the experiment.
