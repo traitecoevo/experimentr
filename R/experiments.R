@@ -1,5 +1,5 @@
-load_parameters <- function(path, id, yml) {
-  parameters_csv <- parameters_csv_name(path)
+load_parameters <- function(experiment, id, yml) {
+  parameters_csv <- parameters_csv_name(experiment)
   if (!file.exists(parameters_csv)) {
     stop("Did not find parameters file at ", parameters_csv)
   }
@@ -12,8 +12,8 @@ load_parameters <- function(path, id, yml) {
   }
   p <- modifyList(as.list(yml$common_parameters),
                   as.list(p[i,]))
-  p$output_directory <- output_task_path(path, yml$path)
-  p$filename <- output_filename(path, yml$path, p$id)
+  p$output_directory <- output_task_path(experiment, yml$path)
+  p$filename <- output_filename(experiment, yml$path, p$id)
   p
 }
 
@@ -40,8 +40,8 @@ git_info <- function() {
   sha
 }
 
-save_metadata <- function(path, task, id) {
-  filename <- metadata_filename(path, task, id)
+save_metadata <- function(experiment, task, id) {
+  filename <- metadata_filename(experiment, task, id)
   dat <- list(sessionInfo=sessionInfo(),
               Sys.info=Sys.info(),
               git=git_info())
@@ -85,21 +85,21 @@ backup <- function(filename, verbose=TRUE) {
 experiments_filename <- function() {
   file.path("experiments", "experiments.yml")
 }
-parameters_csv_name <- function(path) {
-  file.path("experiments/parameters", paste0(path, ".csv"))
+parameters_csv_name <- function(experiment) {
+  file.path("experiments/parameters", paste0(experiment, ".csv"))
 }
-output_path <- function(path) {
-  file.path("experiments/output", path)
+output_path <- function(experiment) {
+  file.path("experiments/output", experiment)
 }
-output_task_path <- function(path, task_path) {
-  output_path(file.path(path, task_path))
+output_task_path <- function(experiment, task) {
+  output_path(file.path(experiment, task))
 }
-output_filename <- function(path, task_path, id) {
-  file.path(output_task_path(path, task_path),
+output_filename <- function(experiment, task, id) {
+  file.path(output_task_path(experiment, task),
             paste0(id, ".rds"))
 }
-metadata_filename <- function(path, task_path, id) {
-  file.path(output_task_path(path, task_path),
+metadata_filename <- function(experiment, task, id) {
+  file.path(output_task_path(experiment, task),
             paste0(id, "_meta.rds"))
 }
 pbs_filename <- function(experiment, task, id) {

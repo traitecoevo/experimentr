@@ -21,7 +21,7 @@ setup_experiment <- function(path, pars, name=basename(path),
 
   if (file.exists(experiments_file)) {
     yml <- yaml::yaml.load_file(experiments_file)
-    if (name %in% names(yml)) {
+    if (path %in% names(yml)) {
       stop("experiment already within file")
     }
   }
@@ -29,11 +29,10 @@ setup_experiment <- function(path, pars, name=basename(path),
   dir.create(output_path)
   write.csv(setup_experiment_pars(pars), parameters_file, row.names=FALSE)
 
-  ret <- list(list(path=path,
-                   packages=packages,
+  ret <- list(list(packages=packages,
                    scripts=scripts,
                    tasks=NULL))
-  names(ret) <- name
+  names(ret) <- path
 
   if (file.exists(experiments_file)) {
     str <- readLines(experiments_file)
