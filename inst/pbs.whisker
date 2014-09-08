@@ -1,0 +1,34 @@
+#!/bin/bash
+
+## Specify project
+#PBS -P xa5
+
+### Specify email address to use for notification.
+### a Send mail when job or subjob is aborted by batch system
+### b Send mail when job or subjob begins execution
+### e Send mail when job or subjob ends execution
+### n Do not send mail
+#PBS -M {{{email}}}
+#PBS -m abe
+
+### Specify queue
+#PBS -q normal
+
+### Max running time
+#PBS -l walltime={{{walltime}}}
+
+### Set the number of cores (cpus) and memory needed for job
+#PBS -l ncpus=1
+#PBS -l mem=1GB
+
+### Start the job in the directory from which it was submitted.
+#PBS -l wd
+
+### specify whether job can be restarted
+#PBS -r n
+
+### load modules if needed
+module load R
+
+#PBS -N {{{experiment}}}__{{{task}}}__{{{id}}}
+./run_experiment.R --experiment {{{EXPERIMENT}}} --task {{{task}}} --id {{{id}}}
