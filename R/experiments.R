@@ -1,15 +1,5 @@
-option_list <- function() {
-  option_list <- list(
-    make_option(c("-e", "--experiment"), type="character",
-                help="name experiment"),
-    make_option(c("-t", "--task"), type="character",
-                help="Task within experiment to run"),
-    make_option(c("-i", "--id"), type="integer",
-                help="ID of the job to run"))
-}
-
 load_parameters <- function(path, id, yml) {
-  parameters_csv <- file.path(path, "parameters.csv")
+  parameters_csv <- parameters_csv_name(path)
   if (!file.exists(parameters_csv)) {
     stop("Did not find parameters file at ", parameters_csv)
   }
@@ -22,9 +12,8 @@ load_parameters <- function(path, id, yml) {
   }
   p <- modifyList(as.list(yml$common_parameters),
                   as.list(p[i,]))
-  p$output_directory <- file.path(path, yml$path)
-  p$filename <- file.path(p$output_directory,
-                          paste0(p$id, ".rds"))
+  p$output_directory <- output_task_path(path, yml$path)
+  p$filename <- output_filename(path, yml$path, p$id)
   p
 }
 
@@ -51,16 +40,15 @@ git_info <- function() {
   sha
 }
 
-save_metadata <- function(pars, path, task) {
-  filename <- file.path(pars$output_directory,
-                        sprintf("%s_meta_%s.rds", pars$id, task))
+save_metadata <- function(path, task, id) {
+  filename <- metadata_filename(path, task, id)
   dat <- list(sessionInfo=sessionInfo(),
               Sys.info=Sys.info(),
               git=git_info())
   if ("tree" %in% loadedNamespaces()) {
     dat$tree=tree:::git_sha()
   }
-  dir.create(pars$output_directory, FALSE, recursive=TRUE)  
+  dir.create(dirname(filename), FALSE, recursive=TRUE)
   saveRDS(dat, filename)
 }
 
@@ -94,67 +82,23 @@ backup <- function(filename, verbose=TRUE) {
   }
 }
 
-run <- function(task, pars, env) {
-  message("--- Starting at ", Sys.time())
-  f <- get(task[["function"]], env, mode="function")
-  nms <- names(formals(f))
-  if (!("filename" %in% nms)) {
-    stop("Function must take 'filename' as an argument")
-  }
-  backup(pars$filename, TRUE)
-  do.call(f, pars[names(pars) %in% nms], envir=env)
-  message("--- Finishing at ", Sys.time())
+experiments_filename <- function() {
+  file.path("experiments", "experiments.yml")
 }
-
-setup_experiment_pars <- function(pars=NULL) {
-  if (!is.data.frame(pars)) {
-    stop("pars must be a data.frame")
-  }
-  id <- seq_len(nrow(pars))
-  data.frame(id=id, pars, stringsAsFactors=FALSE)
+parameters_csv_name <- function(path) {
+  file.path("experiments/parameters", paste0(path, ".csv"))
 }
-
-setup_experiment <- function(path, pars, name=basename(path),
-                             packages=NULL, scripts=NULL) {
-  if (file.exists(path)) {
-    stop("path already exists")
-  }
-  yml <- yaml::yaml.load_file("experiments.yml")
-  if (name %in% names(yml)) {
-    stop("experiment already within file")
-  }
-  pars <- setup_experiment_pars(pars)
-
-  dir.create(path)
-  write.csv(pars, file.path(path, "parameters.csv"), row.names=FALSE)
-  
-  ret <- list(list(path=path,
-                   packages=packages,
-                   scripts=scripts,
-                   tasks=NULL))
-  names(ret) <- name
-
-  str <- readLines("experiments.yml")
-  str_new <- strsplit(yaml::as.yaml(ret), "\n")[[1]]
-  writeLines(c(str, "\n", str_new), "experiments.yml")
+output_path <- function(path) {
+  file.path("experiments/output", path)
 }
-
-main <- function(args) {
-  experiment <- args$experiment
-  task       <- args$task
-  id         <- args$id
-
-  message("Experiment: ", experiment)
-  message("Task:       ", task)
-  message("Id:         ", id)
-  
-  dat_all <- yaml::yaml.load_file("experiments.yml")
-  dat <- get_experiment(experiment, dat_all)
-  dat_task <- get_task(task, dat)
-
-  path <- dat$path
-  pars <- load_parameters(path, id, dat_task)
-  env <- create_environment(dat, dat_task)
-  save_metadata(pars, path, task)
-  run(dat_task, pars, env)
+output_task_path <- function(path, task_path) {
+  output_path(file.path(path, task_path))
+}
+output_filename <- function(path, task_path, id) {
+  file.path(output_task_path(path, task_path),
+            paste0(id, ".rds"))
+}
+metadata_filename <- function(path, task_path, id) {
+  file.path(output_task_path(path, task_path),
+            paste0(id, "_meta.rds"))
 }
