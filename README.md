@@ -14,7 +14,7 @@ This is to address a pattern in computational research.  Suppose you have a set 
 
 # The set up
 
-Run `experimentr::create()`.  This creates directories:
+Run `experimentr::create_dirs()`.  This creates directories:
 
 * `experments/parameters/`
 * `experiments/output/`
