@@ -21,10 +21,36 @@ Run `experimentr::create_dirs()`.  This creates directories:
 
 The first directory will hold sets of parameters associated with each experiment, while the second holds generated output.
 
-Create a set of parameters.  `expand.grid` is useful here.  Something like:
+Next, suppose you have some long-running function, say `target_fn`, defined in file `simulation.R`:
+
+```r
+target_fn <- function(a, b) {
+  list(a=a, b=b)
+}
+```
+
+This is obviously silly, but perhaps this runs a long running set of calculations.  You want to run this function over a large set of parameters, which you'll also need to provide.  `expand.grid` is useful here.  Something like:
 
 ```r
 pars <- expand.grid(a=1:10, b=letters[1:5])
 ```
 
-Generates 100 parameter combination with pairwise combinations of the integers 1 to 10 and the letters "a" to "e".
+Generates 100 parameter combination with pairwise combinations of the integers 1 to 10 and the letters "a" to "e".  Set up the experiment:
+
+```r
+setup_experiment("trial", pars, scripts="simulation.R")
+```
+
+This creates a bunch of directories, and a file with the parameters in it.  We can add a task corresponding to the target function above:
+
+```r
+add_task("trial", "testing", "target_fn")
+```
+
+Then, running
+
+```r
+main(list(experiment="trial", task="testing", id=1))
+```
+
+runs the first set of parameters from this set.
