@@ -3,7 +3,8 @@
 \alias{setup_experiment}
 \title{Set up an experiment}
 \usage{
-setup_experiment(path, pars, packages = NULL, scripts = NULL)
+setup_experiment(path, pars, packages = NULL, scripts = NULL,
+  overwrite = FALSE, purge = FALSE)
 }
 \arguments{
 \item{path}{Path within \code{output/} that things will be stored

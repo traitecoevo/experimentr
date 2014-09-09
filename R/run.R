@@ -52,3 +52,36 @@ run <- function(pars, env) {
   saveRDS(ret, pars$filename)
   message("--- Finishing at ", Sys.time())
 }
+
+##' Run a task.  This is designed to run locally, rather than being
+##' run from a cluster.
+##' @title Run a task
+##' @param experiment Name of the experiment
+##' @param task Name of the task
+##' @param id Id of the jobs to run.  If omitted, all ids for this
+##' experiment will be run.
+##' @param parallel Run in parallel using \code{parallel::mclapply}?
+##' @param ... Arguments passed through to \code{mclapply}.  In
+##' particular, it will probably be useful to set
+##' \code{mc.preschedule=FALSE} and specify \code{mc.cores}.
+##' @export
+run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...) {
+  dat <- yaml::yaml.load_file(experiments_filename())
+  if (is.null(id)) {
+    p <- read.csv(parameters_csv_name(experiment),
+                  stringsAsFactors=FALSE)
+    id <- p$id
+  }
+  f <- function(id) {
+    pars <- load_task_info(experiment, task, id, dat)
+    env <- create_environment(experiment, task, dat)
+    save_metadata(experiment, task, id)
+    run(pars, env)
+  }
+  if (parallel) {
+    parallel::mclapply(id, f, ...)
+  } else {
+    lapply(id, f)
+  }
+  invisible(NULL)
+}
