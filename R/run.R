@@ -36,7 +36,7 @@ main <- function(args=NULL, dry_run=FALSE) {
   env <- create_environment(experiment, task, dat)
 
   if (!dry_run) {
-    save_metadata(experiment, task, id)
+    save_metadata(experiment, task, id, dat, env)
     run(pars, env)
   }
 }
@@ -75,7 +75,7 @@ run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...) {
   f <- function(id) {
     pars <- load_task_info(experiment, task, id, dat)
     env <- create_environment(experiment, task, dat)
-    save_metadata(experiment, task, id)
+    save_metadata(experiment, task, id, dat, env)
     run(pars, env)
   }
   if (parallel) {

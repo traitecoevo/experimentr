@@ -21,6 +21,7 @@ setup_experiment_pars <- function(pars=NULL) {
 ##' @author Rich FitzJohn
 ##' @export
 setup_experiment <- function(path, pars, packages=NULL, scripts=NULL,
+                             metadata=NULL,
                              overwrite=FALSE, purge=FALSE) {
   experiments_file <- experiments_filename()
   output_path <- output_path(path)
@@ -43,6 +44,7 @@ setup_experiment <- function(path, pars, packages=NULL, scripts=NULL,
 
   ret <- list(list(packages=packages,
                    scripts=scripts,
+                   metadata=metadata,
                    tasks=NULL))
   names(ret) <- path
 

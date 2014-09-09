@@ -9,7 +9,9 @@ test_that("Simple dry run", {
 
   pars <- expand.grid(a=1:10, b=runif(10))
   setup_experiment("trial", pars, scripts="simulation.R",
-                   packages=c("ape", "MASS"), overwrite=TRUE)
+                   packages=c("ape", "MASS"),
+                   metadata="metadata_hook",
+                   overwrite=TRUE)
   add_task("trial", "testing", "target_fn")
   add_task("trial", "reprocess", "reprocess_fn",
            depends=list(dat="testing"))

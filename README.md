@@ -54,3 +54,7 @@ main(list(experiment="trial", task="testing", id=1))
 ```
 
 runs the first set of parameters from this set.
+
+# Metadata
+
+By default, we save package version information for all packages installed (via `sessionInfo()`, plus the status of the git repository that the project is run in (SHA plus a list of files unknown to git or modified), plus the system information (via `Sys.info()`).  If extra information is required, an experiment can have a key `metadata` that refers to a function that takes no arguments and returns a list of other metadata.
