@@ -2,8 +2,8 @@ PACKAGE := $(shell grep '^Package:' DESCRIPTION | sed -E 's/^Package:[[:space:]]
 
 all: install
 
-test: install
-	make -C tests/testthat test
+test:
+	Rscript -e 'library(methods); devtools::test()'
 
 roxygen:
 	@mkdir -p man
