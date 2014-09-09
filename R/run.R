@@ -68,9 +68,7 @@ run <- function(pars, env) {
 run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...) {
   dat <- yaml::yaml.load_file(experiments_filename())
   if (is.null(id)) {
-    p <- read.csv(parameters_csv_name(experiment),
-                  stringsAsFactors=FALSE)
-    id <- p$id
+    id <- ids(experiment)
   }
   f <- function(id) {
     pars <- load_task_info(experiment, task, id, dat)
