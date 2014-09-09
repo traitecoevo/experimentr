@@ -74,6 +74,21 @@ remove_experiment <- function(experiment, purge=FALSE) {
   }
 }
 
+#' Add a task to an experiment
+#'
+#' Adds a task to an existing experiment
+#' @param  experiment name
+#' @param task task name
+#' @param function_name name of function to call
+#' @param common_parameters Parameters that are constant for all runs within this task
+#' @param packages Optional character vector of packages to load for
+#' every task in this experiment
+#' @param scripts Optional characte vector of scripts to source for
+#' every task in this experiment
+#' @param overwrite Replace existing specifiction, if it exists
+#' @param purge
+#' @param depends Does this task depend on other tasks existing
+#' @export
 add_task <- function(experiment, task, function_name,
                      common_parameters=NULL,
                      packages=NULL, scripts=NULL,
