@@ -76,7 +76,7 @@ run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...) {
     save_metadata(experiment, task, id, dat, env)
     run(pars, env)
   }
-  if (parallel) {
+  if (parallel && length(id) > 1L) {
     parallel::mclapply(id, f, ...)
   } else {
     lapply(id, f)
