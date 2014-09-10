@@ -33,7 +33,9 @@ setup_experiment <- function(path, pars, packages=NULL, scripts=NULL,
 
   if (file.exists(experiments_file)) {
     yml <- yaml::yaml.load_file(experiments_file)
-    stop("experiment already within file")
+    if (path %in% names(yml)) {
+      stop("experiment already within file")
+    }
   }
 
   if (!overwrite && file.exists(output_path)) {
