@@ -67,7 +67,7 @@ git_info <- function() {
 
 save_metadata <- function(experiment, task, id, dat, env) {
   filename <- metadata_filename(experiment, task, id)
-  dir.create(basename(filename), showWarnings=FALSE, recursive=TRUE)
+  dir.create(dirname(filename), showWarnings=FALSE, recursive=TRUE)
   metadata <- list(sessionInfo=sessionInfo(),
                    Sys.info=Sys.info(),
                    git=git_info())
