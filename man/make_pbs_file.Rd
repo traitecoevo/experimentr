@@ -17,6 +17,8 @@ make_pbs_file(experiment, task, id, email = getOption("experimentr.email"),
 
 \item{walltime}{Requested walltime}
 
+\item{queue}{Name of the queue to use}
+
 \item{template}{Contents of a whisker template, or NULL to use the
 default.}
 

@@ -24,7 +24,8 @@ every task in this experiment}
 
 \item{overwrite}{Replace existing specifiction, if it exists}
 
-\item{purge}{}
+\item{purge}{If overwriting, delete files associated with previous
+task?}
 
 \item{depends}{Does this task depend on other tasks existing}
 }

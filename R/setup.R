@@ -18,6 +18,10 @@ setup_experiment_pars <- function(pars=NULL) {
 ##' every task in this experiment
 ##' @param scripts Optional characte vector of scripts to source for
 ##' every task in this experiment
+##' @param metadata Metadata hook
+##' @param overwrite Overwrite an existing experiment?
+##' @param purge If overwriting, also delete all the output from that
+##' experiment?
 ##' @author Rich FitzJohn
 ##' @export
 setup_experiment <- function(path, pars, packages=NULL, scripts=NULL,
@@ -81,7 +85,7 @@ remove_experiment <- function(experiment, purge=FALSE) {
 #' Add a task to an experiment
 #'
 #' Adds a task to an existing experiment
-#' @param  experiment name
+#' @param experiment name
 #' @param task task name
 #' @param function_name name of function to call
 #' @param common_parameters Parameters that are constant for all runs within this task
@@ -90,7 +94,8 @@ remove_experiment <- function(experiment, purge=FALSE) {
 #' @param scripts Optional characte vector of scripts to source for
 #' every task in this experiment
 #' @param overwrite Replace existing specifiction, if it exists
-#' @param purge
+#' @param purge If overwriting, delete files associated with previous
+#' task?
 #' @param depends Does this task depend on other tasks existing
 #' @export
 add_task <- function(experiment, task, function_name,

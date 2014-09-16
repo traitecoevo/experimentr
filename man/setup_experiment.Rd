@@ -17,6 +17,13 @@ every task in this experiment}
 
 \item{scripts}{Optional characte vector of scripts to source for
 every task in this experiment}
+
+\item{metadata}{Metadata hook}
+
+\item{overwrite}{Overwrite an existing experiment?}
+
+\item{purge}{If overwriting, also delete all the output from that
+experiment?}
 }
 \description{
 Set up an experiment

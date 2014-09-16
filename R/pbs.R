@@ -6,6 +6,7 @@
 ##' @param id Id number
 ##' @param email Email to send updates to
 ##' @param walltime Requested walltime
+##' @param queue Name of the queue to use
 ##' @param template Contents of a whisker template, or NULL to use the
 ##' default.
 ##' @param path Path to write the pbs file to.
