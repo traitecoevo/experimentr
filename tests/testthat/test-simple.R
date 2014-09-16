@@ -9,7 +9,7 @@ test_that("Simple dry run", {
 
   pars <- expand.grid(a=1:10, b=runif(10))
   setup_experiment("trial", pars, scripts="simulation.R",
-                   packages=c("ape", "MASS"),
+                   packages=c("utils", "MASS"),
                    metadata="metadata_hook",
                    overwrite=TRUE)
   add_task("trial", "testing", "target_fn")
@@ -31,7 +31,6 @@ test_that("pbs workflow", {
   unlink("pbs", recursive=TRUE)
   copy_runner()
   options(experimentr.email="rich.fitzjohn@gmail.com")
-  devtools::load_all("../../")
   dir.create("pbs")
   files <- make_pbs_file("trial", "testing", 1:100, path="pbs", queue="express")
   qsub(files)
