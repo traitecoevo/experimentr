@@ -1,5 +1,7 @@
 # experimentr
 
+[![Build Status](https://travis-ci.org/richfitz/experimentr.png?branch=master)](https://travis-ci.org/richfitz/experimentr)
+
 **This is all a hack: use at your own risk.  This is pretty heavily tailored around a specific need that we have**
 
 # What is this for?
