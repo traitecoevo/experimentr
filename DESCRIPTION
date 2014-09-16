@@ -15,4 +15,6 @@ Imports:
     yaml
 Suggests:
     testthat,
-    parallel
+    parallel,
+    MASS,
+    utils
