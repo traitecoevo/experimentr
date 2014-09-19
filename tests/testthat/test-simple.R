@@ -17,12 +17,12 @@ test_that("Simple dry run", {
            depends=list(dat="testing"))
 
   for (i in 1:10) {
-    main(list(experiment="trial", task="testing", id=i))
+    main(list(experiment="trial", task="testing", id=i, dry_run=FALSE))
     expect_that(file.exists(output_filename("trial", "testing", i)), is_true())
   }
 
   for (i in 1:10) {
-    main(list(experiment="trial", task="reprocess", id=i))
+    main(list(experiment="trial", task="reprocess", id=i, dry_run=FALSE))
     expect_that(file.exists(output_filename("trial", "reprocess", i)), is_true())
   }
 })
