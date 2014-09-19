@@ -47,6 +47,8 @@ main <- function(args=NULL) {
 ##' @param ... Arguments passed through to \code{mclapply}.  In
 ##' particular, it will probably be useful to set
 ##' \code{mc.preschedule=FALSE} and specify \code{mc.cores}.
+##' @param dry_run Logical, indicating if we should \emph{actually}
+##' run things.
 ##' @export
 run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
                      dry_run=FALSE) {

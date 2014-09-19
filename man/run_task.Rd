@@ -3,7 +3,8 @@
 \alias{run_task}
 \title{Run a task}
 \usage{
-run_task(experiment, task, id = NULL, parallel = TRUE, ...)
+run_task(experiment, task, id = NULL, parallel = TRUE, ...,
+  dry_run = FALSE)
 }
 \arguments{
 \item{experiment}{Name of the experiment}
@@ -18,6 +19,9 @@ experiment will be run.}
 \item{...}{Arguments passed through to \code{mclapply}.  In
 particular, it will probably be useful to set
 \code{mc.preschedule=FALSE} and specify \code{mc.cores}.}
+
+\item{dry_run}{Logical, indicating if we should \emph{actually}
+run things.}
 }
 \description{
 Run a task.  This is designed to run locally, rather than being

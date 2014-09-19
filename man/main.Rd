@@ -3,12 +3,10 @@
 \alias{main}
 \title{Run an experiment, from the command line}
 \usage{
-main(args = NULL, dry_run = FALSE)
+main(args = NULL)
 }
 \arguments{
 \item{args}{Arguments (or NULL to read from R's \code{commandArgs})}
-
-\item{dry_run}{Just print information but don't run anything}
 }
 \description{
 Run an experiment, from the command line.
