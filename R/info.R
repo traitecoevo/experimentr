@@ -25,3 +25,24 @@ ids <- function(experiment) {
                 stringsAsFactors=FALSE)
   p$id
 }
+
+##' Print information on how many jobs have started (or possibly how
+##' many have completed)
+##' @title Print job information
+##' @param experiment Name of the experiment
+##' @param task Name of the task within experiment
+##' @export
+print_progress <- function(experiment, task) {
+  info <- progress(experiment, task)
+  message(sprintf("%d / %d started", sum(info$started), nrow(info)))
+}
+
+##' @rdname print_progress
+progress <- function(experiment, task) {
+  yml <- yaml::yaml.load_file(experiments_filename())
+  get_task(experiment, task, yml) # check things exist
+  id <- ids(experiment)
+  files <- output_filename(experiment, task, id)
+  started <- file.exists(files)
+  data.frame(id=id, started=started)
+}
