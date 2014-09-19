@@ -11,7 +11,7 @@
 ##' default.
 ##' @param path Path to write the pbs file to.
 ##' @export
-make_pbs_file <- function(experiment, task, id,
+make_pbs_file <- function(experiment, task, id=NULL,
                           email=getOption("experimentr.email"),
                           walltime="48:00", queue="normal",
                           template=NULL,
@@ -23,6 +23,9 @@ make_pbs_file <- function(experiment, task, id,
   }
   if (length(experiment) != 1 || length(task) != 1) {
     stop("experiment and task must be scalar")
+  }
+  if (is.null(id)) {
+    id <- ids("experiment")
   }
 
   f <- function(experiment, task, id, walltime, email, queue) {
