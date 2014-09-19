@@ -19,15 +19,16 @@ load_task_info <- function(experiment, task, id, yml) {
   p$filename <- output_filename(experiment, task, p$id)
   p$function_name <- dat_task[["function_name"]]
 
-  if (!is.null(dat_task$depends)) {
-    ## TODO: Validation so that we don't overwrite names we use
-    ## elsewhere, etc.
-    for (i in names(dat_task$depends)) {
-      p[[i]] <-
-        readRDS(output_filename(experiment, dat_task$depends[[i]], id))
-    }
+  ## TODO: Validation so that we don't overwrite names we use elsewhere?
+  for (i in names(dat_task$depends)) {
+    p[[i]] <- load_output(experiment, dat_task$depends[[i]], id)
   }
+
   p
+}
+
+load_output <- function(experiment, task, id) {
+  readRDS(output_filename(experiment, task, id))
 }
 
 get_task <- function(experiment, task, yml) {
