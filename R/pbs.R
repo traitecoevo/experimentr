@@ -25,7 +25,7 @@ make_pbs_file <- function(experiment, task, id=NULL,
     stop("experiment and task must be scalar")
   }
   if (is.null(id)) {
-    id <- ids("experiment")
+    id <- ids(experiment)
   }
 
   f <- function(experiment, task, id, walltime, email, queue) {
