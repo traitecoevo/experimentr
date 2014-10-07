@@ -3,6 +3,8 @@ if (interactive()) {
   library(testthat)
 }
 
+context("experimentr")
+
 test_that("Simple dry run", {
   unlink("experiments", recursive=TRUE)
   experimentr::create_dirs()
@@ -25,6 +27,16 @@ test_that("Simple dry run", {
     main(list(experiment="trial", task="reprocess", id=i, dry_run=FALSE))
     expect_that(file.exists(output_filename("trial", "reprocess", i)), is_true())
   }
+})
+
+test_that("Add parameters to experiment", {
+  pars <- expand.grid(a=11:20, b=runif(10))
+  id <- add_parameters("trial", pars)
+  expect_that(id, equals(101:200))
+
+  pars <- expand.grid(a=11:20, c=runif(10))
+  expect_that(add_parameters("trial", pars),
+              throws_error("New parameters must have column names:"))
 })
 
 test_that("pbs workflow", {

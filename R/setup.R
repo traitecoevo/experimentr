@@ -63,6 +63,33 @@ setup_experiment <- function(path, pars, packages=NULL, scripts=NULL,
   writeLines(c(str, "\n", str_new), experiments_file)
 }
 
+
+##' Add parameters to an existing experiment
+##' @title Add parameters to an experiment
+##' @param experiment Name of the experiment
+##' @param pars data.frame of the parameters.  Column names must match
+##' the existing parameters
+##' @export
+add_parameters <- function(experiment, pars) {
+  experiments_file <- experiments_filename()
+  yml <- yaml::yaml.load_file(experiments_file)
+  exp <- get_experiment(experiment, yml)
+
+  parameters_file <- parameters_csv_name(experiment)
+  pars_existing <- read.csv(parameters_file, stringsAsFactors=FALSE)
+  cols <- setdiff(names(pars_existing), "id")
+  if (!identical(names(pars), cols)) {
+    stop("New parameters must have column names: ",
+         paste(sprintf('"%s"', cols), collapse=", "))
+  }
+  id_start <- pars_existing$id[nrow(pars_existing)] + 1
+  id_new <- seq(id_start, by=1, length=nrow(pars))
+  pars_with_id <- cbind(id=id_new, pars)
+  res <- rbind(pars_existing, pars_with_id)
+  write.csv(res, parameters_file, row.names=FALSE)
+  invisible(id_new)
+}
+
 remove_experiment <- function(experiment, purge=FALSE) {
   experiments_file <- experiments_filename()
   if (file.exists(experiments_file)) {
