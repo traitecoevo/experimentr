@@ -49,6 +49,8 @@ main <- function(args=NULL) {
 ##' \code{mc.preschedule=FALSE} and specify \code{mc.cores}.
 ##' @param dry_run Logical, indicating if we should \emph{actually}
 ##' run things.
+##' @param overwrite Should we delete existing output before running
+##' (preventing jobs that might have a resume capability).
 ##' @export
 run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
                      dry_run=FALSE, overwrite=TRUE) {

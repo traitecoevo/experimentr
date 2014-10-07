@@ -4,7 +4,7 @@
 \title{Run a task}
 \usage{
 run_task(experiment, task, id = NULL, parallel = TRUE, ...,
-  dry_run = FALSE)
+  dry_run = FALSE, overwrite = TRUE)
 }
 \arguments{
 \item{experiment}{Name of the experiment}
@@ -22,6 +22,9 @@ particular, it will probably be useful to set
 
 \item{dry_run}{Logical, indicating if we should \emph{actually}
 run things.}
+
+\item{overwrite}{Should we delete existing output before running
+(preventing jobs that might have a resume capability).}
 }
 \description{
 Run a task.  This is designed to run locally, rather than being
