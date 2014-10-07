@@ -34,7 +34,8 @@ make_pbs_file <- function(experiment, task, id=NULL,
     writeLines(str, filename)
     filename
   }
-  invisible(sapply(id, function(x) f(experiment, task, x, walltime, email, queue)))
+  invisible(sapply(id, function(x)
+                   f(experiment, task, x, walltime, email, queue)))
 }
 
 ##' Copy a helper script that runs a parameter set from the experiment.
@@ -53,7 +54,9 @@ qsub <- function(pbs_filenames, echo_only=TRUE) {
       message(paste(command, args))
     }
   }
-  for (i in pbs_filenames) {
-    system2("qsub", i)
+  pbs_ids <- vector("list", length=pbs_filenames)
+  for (i in seq_along(pbs_filenames)) {
+    pbs_ids[[i]] <- system2("qsub", pbs_filenames[[i]], stdout=TRUE)
   }
+  invisible(pbs_ids)
 }
