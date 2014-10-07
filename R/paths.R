@@ -21,3 +21,10 @@ metadata_filename <- function(experiment, task, id) {
 pbs_filename <- function(experiment, task, id) {
   sprintf("%s__%s__%d.pbs", experiment, task, id)
 }
+log_task_path <- function(experiment, task) {
+  file.path("experiments/logs", experiment, task)
+}
+log_filename <- function(experiment, task, id) {
+  file.path(log_task_path(experiment, task),
+            paste0(id, ".txt"))
+}

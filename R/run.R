@@ -77,7 +77,16 @@ run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
   invisible(NULL)
 }
 
-run <- function(pars, env) {
+run <- function(pars, env, capture_all_output=!interactive()) {
+  if (capture_all_output) {
+    message("Diverting messages to ", pars$logfile)
+    dir.create(dirname(pars$logfile), showWarnings=FALSE, recursive=TRUE)
+    con <- file(pars$logfile, open="wt")
+    sink(con, type="message") # Dangerous!
+    sink(con, type="output")
+    on.exit(sink(NULL, type="message"))
+    on.exit(sink(NULL, type="output"), add=TRUE)
+  }
   message("--- Starting at ", Sys.time())
   f <- get(pars$function_name, env, mode="function")
   nms <- names(formals(f))

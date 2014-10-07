@@ -16,7 +16,9 @@ load_task_info <- function(experiment, task, id, yml) {
   p <- modifyList(as.list(dat_task$common_parameters),
                   as.list(p[i,]))
   p$output_directory <- output_task_path(experiment, task)
+  p$log_directory <- log_task_path(experiment, task)
   p$filename <- output_filename(experiment, task, p$id)
+  p$logfile <- log_filename(experiment, task, p$id)
   p$function_name <- dat_task[["function_name"]]
 
   ## TODO: Validation so that we don't overwrite names we use elsewhere?

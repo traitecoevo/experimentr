@@ -106,16 +106,19 @@ add_task <- function(experiment, task, function_name,
   experiments_file <- experiments_filename()
   yml <- yaml::yaml.load_file(experiments_file)
   exp <- get_experiment(experiment, yml)
-  path <- output_task_path(experiment, task)
+  path_output <- output_task_path(experiment, task)
+  path_log <- log_task_path(experiment, task)
   if (task %in% names(exp$tasks)) {
     if (!overwrite) {
       stop("task already exists")
     }
     if (purge) {
-      file_remove_if_exists(path)
+      file_remove_if_exists(path_output)
+      file_remove_if_exists(path_log)
     }
   }
-  dir.create(path, FALSE)
+  dir.create(path_output, FALSE)
+  dir.create(path_log, FALSE)
 
   ret <- list(function_name=function_name)
   ## No checking here:
