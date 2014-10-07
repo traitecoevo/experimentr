@@ -75,8 +75,7 @@ add_parameters <- function(experiment, pars) {
   yml <- yaml::yaml.load_file(experiments_file)
   exp <- get_experiment(experiment, yml)
 
-  parameters_file <- parameters_csv_name(experiment)
-  pars_existing <- read.csv(parameters_file, stringsAsFactors=FALSE)
+  pars_existing <- load_parameters(experiment)
   cols <- setdiff(names(pars_existing), "id")
   if (!identical(names(pars), cols)) {
     stop("New parameters must have column names: ",
@@ -86,7 +85,7 @@ add_parameters <- function(experiment, pars) {
   id_new <- seq(id_start, by=1, length=nrow(pars))
   pars_with_id <- cbind(id=id_new, pars)
   res <- rbind(pars_existing, pars_with_id)
-  write.csv(res, parameters_file, row.names=FALSE)
+  write.csv(res, parameters_csv_name(experiment), row.names=FALSE)
   invisible(id_new)
 }
 

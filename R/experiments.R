@@ -1,9 +1,5 @@
 load_task_info <- function(experiment, task, id, yml) {
-  parameters_csv <- parameters_csv_name(experiment)
-  if (!file.exists(parameters_csv)) {
-    stop("Did not find parameters file at ", parameters_csv)
-  }
-  p <- read.csv(parameters_csv, stringsAsFactors=FALSE)
+  p <- load_parameters(experiment)
 
   dat_task <- get_task(experiment, task, yml)
 

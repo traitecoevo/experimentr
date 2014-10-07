@@ -15,15 +15,24 @@ tasks <- function(experiment) {
   exp <- get_experiment(experiment, dat)
   names(exp$tasks)
 }
+##' Load parameters
+##' @title Load parameters
+##' @param experiment Name of experiment
+##' @export
+load_parameters <- function(experiment) {
+  parameters_csv <- parameters_csv_name(experiment)
+  if (!file.exists(parameters_csv)) {
+    stop("Did not find parameters file at ", parameters_csv)
+  }
+  read.csv(parameters_csv, stringsAsFactors=FALSE)
+}
 
 ##' Get valid ids
 ##' @title Get valid ids
 ##' @param experiment Name of the experiment
 ##' @export
 ids <- function(experiment) {
-  p <- read.csv(parameters_csv_name(experiment),
-                stringsAsFactors=FALSE)
-  p$id
+  load_parameters(experiment)$id
 }
 
 ##' Look for jobs that have not completed.  Very simple minded and
@@ -65,4 +74,41 @@ progress <- function(experiment, task) {
   files <- output_filename(experiment, task, id)
   started <- file.exists(files)
   data.frame(id=id, started=started)
+}
+
+##' Load output for a given task
+##' @title Load output for a given task
+##' @param experiment Name of the experiment
+##' @param task Name of the task
+##' @param id Optional vector of ids
+##' @param f Optional Function to apply to each output
+##' @param missing_ok Logical indicating if missing ids are OK: if so
+##' a \code{NULL} will be given for this set.
+##' @export
+##' @author Rich FitzJohn
+load_output <- function(experiment, task, id=NULL, f=identity,
+                        missing_ok=TRUE) {
+  if (is.null(id)) {
+    id <- ids(experiment)
+  }
+
+  yml <- yaml::yaml.load_file(experiments_filename())
+  get_task(experiment, task, yml) # check things exist
+  files <- output_filename(experiment, task, id)
+
+  ok <- file.exists(files)
+  if (any(!ok) && !missing_ok) {
+    stop("Missing output files: ", paste(id[ok], collapse=", "))
+  }
+
+  pars <- load_parameters(experiment)
+  i <- match(id, pars$id)
+  if (any(is.na(i))) {
+    stop("Invalid ids: ", paste(id[is.na(i)], collapse=", "))
+  }
+  pars <- pars[i,]
+  ret <- vector("list", length(ids))
+  ret[ok] <- lapply(files[ok], function(x) f(readRDS(x)))
+  attr(ret, "pars") <- pars
+  ret
 }
