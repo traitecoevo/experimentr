@@ -26,6 +26,26 @@ ids <- function(experiment) {
   p$id
 }
 
+##' Look for jobs that have not completed.  Very simple minded and
+##' only looks for existance of the output file.  Eventually this will
+##' support running a custom function over the output.
+##' @title Identify incomplete ids
+##' @param experiment Name of the experiment
+##' @param task Name of the task
+##' @param test Function to apply to each output to determine
+##' "done-ness" (not yet implemented)
+##' @export
+ids_incomplete <- function(experiment, task, test=NULL) {
+  if (!is.null(test)) {
+    .NotYetImplemented()
+  }
+  yml <- yaml::yaml.load_file(experiments_filename())
+  get_task(experiment, task, yml) # check things exist
+  id <- ids(experiment)
+  files <- output_filename(experiment, task, id)
+  id[!file.exists(files)]
+}
+
 ##' Print information on how many jobs have started (or possibly how
 ##' many have completed)
 ##' @title Print job information
