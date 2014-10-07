@@ -12,7 +12,7 @@ file_remove_if_exists <- function(filename, dir=FALSE) {
   }
 }
 
-backup <- function(filename, verbose=TRUE) {
+backup <- function(filename, verbose=TRUE, move=FALSE) {
   if (file.exists(filename)) {
     pat <- sprintf("%s\\.([0-9]+)", basename(filename))
     found <- dir(dirname(filename), pattern=pat)
@@ -23,8 +23,13 @@ backup <- function(filename, verbose=TRUE) {
     }
     dest <- sprintf("%s.%d", filename, n)
     if (verbose) {
-      message(sprintf("Backing up %s -> %s", filename, basename(dest)))
+      action <- if (move) "Moving" else "Copying"
+      message(sprintf("%s %s -> %s", action, filename, basename(dest)))
     }
-    file.copy(filename, dest)
+    if (move) {
+      file.rename(filename, dest)
+    } else {
+      file.copy(filename, dest)
+    }
   }
 }

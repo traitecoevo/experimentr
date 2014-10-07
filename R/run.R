@@ -51,7 +51,7 @@ main <- function(args=NULL) {
 ##' run things.
 ##' @export
 run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
-                     dry_run=FALSE) {
+                     dry_run=FALSE, overwrite=TRUE) {
   message("Experiment: ", experiment)
   message("Task:       ", task)
   
@@ -60,12 +60,16 @@ run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
     id <- ids(experiment)
   }
   message("Id:         ", paste(id, collapse=", "))
-  
+
   f <- function(id) {
     pars <- load_task_info(experiment, task, id, dat)
     env <- create_environment(experiment, task, dat)
+
     if (!dry_run) {
-      save_metadata(experiment, task, id, dat, env)
+      ## NOTE: These can easily get out-of-sync
+      backup(pars$filename, move=overwrite)
+      backup(pars$metaname, move=TRUE)
+      save_metadata(pars$metaname, experiment, dat, env)
       run(pars, env)
     }
   }
@@ -87,12 +91,11 @@ run <- function(pars, env, capture_all_output=!interactive()) {
     on.exit(sink(NULL, type="message"))
     on.exit(sink(NULL, type="output"), add=TRUE)
   }
-  message("--- Starting at ", Sys.time())
+  message("--- Finishing at ", Sys.time())
   f <- get(pars$function_name, env, mode="function")
   nms <- names(formals(f))
   ## TODO: Process prerequisites here to allow using filenames from
   ## previous versions.
-  backup(pars$filename, TRUE)
   ret <- do.call(f, pars[names(pars) %in% nms], envir=env)
   saveRDS(ret, pars$filename)
   message("--- Finishing at ", Sys.time())

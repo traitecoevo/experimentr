@@ -18,6 +18,7 @@ load_task_info <- function(experiment, task, id, yml) {
   p$output_directory <- output_task_path(experiment, task)
   p$log_directory <- log_task_path(experiment, task)
   p$filename <- output_filename(experiment, task, p$id)
+  p$metaname <- metadata_filename(experiment, task, p$id)
   p$logfile <- log_filename(experiment, task, p$id)
   p$function_name <- dat_task[["function_name"]]
 
@@ -68,8 +69,7 @@ git_info <- function() {
   sha
 }
 
-save_metadata <- function(experiment, task, id, dat, env) {
-  filename <- metadata_filename(experiment, task, id)
+save_metadata <- function(filename, experiment, dat, env) {
   dir.create(dirname(filename), showWarnings=FALSE, recursive=TRUE)
   metadata <- list(sessionInfo=sessionInfo(),
                    Sys.info=Sys.info(),
