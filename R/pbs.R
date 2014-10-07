@@ -50,11 +50,11 @@ copy_runner <- function(dest="run_experiment.R") {
 
 qsub <- function(pbs_filenames, echo_only=TRUE) {
   if (echo_only) {
-    system2 <- function(command, args) {
-      message(paste(command, args))
+    system2 <- function(command, args, ...) {
+      message(paste(command, args, ...))
     }
   }
-  pbs_ids <- vector("list", length=pbs_filenames)
+  pbs_ids <- vector("list", length=length(pbs_filenames))
   for (i in seq_along(pbs_filenames)) {
     pbs_ids[[i]] <- system2("qsub", pbs_filenames[[i]], stdout=TRUE)
   }
