@@ -20,13 +20,13 @@ load_task_info <- function(experiment, task, id, yml) {
 
   ## TODO: Validation so that we don't overwrite names we use elsewhere?
   for (i in names(dat_task$depends)) {
-    p[[i]] <- load_output(experiment, dat_task$depends[[i]], id)
+    p[[i]] <- load_output1(experiment, dat_task$depends[[i]], id)
   }
 
   p
 }
 
-load_output <- function(experiment, task, id) {
+load_output1 <- function(experiment, task, id) {
   readRDS(output_filename(experiment, task, id))
 }
 
