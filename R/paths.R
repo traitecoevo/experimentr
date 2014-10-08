@@ -22,7 +22,7 @@ pbs_filename <- function(experiment, task, id) {
   sprintf("%s__%s__%d.pbs", experiment, task, id)
 }
 log_task_path <- function(experiment, task) {
-  file.path("experiments/logs", experiment, task)
+  file.path("experiments/output", experiment, task, "logs")
 }
 log_filename <- function(experiment, task, id) {
   file.path(log_task_path(experiment, task),
