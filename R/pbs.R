@@ -118,6 +118,10 @@ process_pbs <- function(experiment, task, id, pbs) {
 ##' @export
 move_pbs_logs <- function(path=".", jobfile="pbs_jobs.csv",
                           verbose=TRUE) {
+  if (!file.exists(jobfile)) {
+    stop(sprintf("jobfile %s does not exist: launch jobs with launch_pbs",
+                 jobfile))
+  }
   jobs <- read.csv(jobfile, stringsAsFactors=FALSE)
 
   re <- ".*\\.e([0-9]+)$"
