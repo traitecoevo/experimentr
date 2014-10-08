@@ -93,7 +93,7 @@ run <- function(pars, env, capture_all_output=!interactive()) {
     on.exit(sink(NULL, type="message"))
     on.exit(sink(NULL, type="output"), add=TRUE)
   }
-  message("--- Finishing at ", Sys.time())
+  message("--- Starting at ", Sys.time())
   f <- get(pars$function_name, env, mode="function")
   nms <- names(formals(f))
   ## TODO: Process prerequisites here to allow using filenames from
