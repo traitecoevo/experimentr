@@ -82,7 +82,7 @@ launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv") {
                          walltime="48:00:00",
                          queue="normal")
   res <- sapply(files, qsub, echo_only=FALSE)
-  curr <- process_pbs(experiment, task, id, pbs)
+  dat <- process_pbs(experiment, task, id, res)
   append_jobfile(dat, jobfile)
   invisible(res)
 }
