@@ -76,7 +76,7 @@ launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv") {
   }
   ## NOTE: this will happily overshoot on the id.
   files <- make_pbs_file(experiment,
-                         "simulations",
+                         task,
                          id=id,
                          email="daniel.falster@mq.edu.au",
                          walltime="48:00:00",
