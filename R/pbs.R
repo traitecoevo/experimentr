@@ -70,7 +70,11 @@ qsub <- function(pbs_filenames, echo_only=TRUE) {
 ##' pbs job id with experimentrs information.  This is used by
 ##' \code{\link{move_pbs_logs}}.
 ##' @export
-launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv") {
+launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv",
+                      email=getOption("experimentr.email"),
+                      walltime="48:00", queue="normal",
+                      template=NULL,
+                      path=".") {
   if (is.null(id)) {
     id <- ids(experiment)
   }
@@ -78,9 +82,11 @@ launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv") {
   files <- make_pbs_file(experiment,
                          task,
                          id=id,
-                         email="daniel.falster@mq.edu.au",
-                         walltime="48:00:00",
-                         queue="normal")
+                         email=email,
+                         walltime=walltime,
+                         queue=queue,
+                         template=template,
+                         path=path)
   res <- sapply(files, qsub, echo_only=FALSE)
   dat <- process_pbs(experiment, task, id, res)
   append_jobfile(dat, jobfile)
