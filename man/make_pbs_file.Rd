@@ -4,7 +4,7 @@
 \title{Generate pbs files from a template}
 \usage{
 make_pbs_file(experiment, task, id = NULL,
-  email = getOption("experimentr.email"), walltime = "48:00",
+  email = getOption("experimentr.email"), walltime = "48:00:00",
   queue = "normal", template = NULL, path = ".")
 }
 \arguments{

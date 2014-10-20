@@ -13,7 +13,7 @@
 ##' @export
 make_pbs_file <- function(experiment, task, id=NULL,
                           email=getOption("experimentr.email"),
-                          walltime="48:00", queue="normal",
+                          walltime="48:00:00", queue="normal",
                           template=NULL,
                           path=".") {
   if (is.null(template)) {
@@ -72,7 +72,7 @@ qsub <- function(pbs_filenames, echo_only=TRUE) {
 ##' @export
 launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv",
                       email=getOption("experimentr.email"),
-                      walltime="48:00", queue="normal",
+                      walltime="48:00:00", queue="normal",
                       template=NULL,
                       path=".") {
   if (is.null(id)) {

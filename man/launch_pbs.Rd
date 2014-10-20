@@ -4,7 +4,7 @@
 \title{Launch jobs via qsub}
 \usage{
 launch_pbs(experiment, task, id = NULL, jobfile = "pbs_jobs.csv",
-  email = getOption("experimentr.email"), walltime = "48:00",
+  email = getOption("experimentr.email"), walltime = "48:00:00",
   queue = "normal", template = NULL, path = ".")
 }
 \arguments{
