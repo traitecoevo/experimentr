@@ -32,6 +32,9 @@ main <- function(args=NULL) {
   if (length(id) != 1L) {
     stop("Expected single id")
   }
+  if (is.null(getOption("error"))) {
+    options(error=traceback)
+  }
 
   run_task(experiment, task, id, dry_run=dry_run)
 }
