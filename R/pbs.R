@@ -148,7 +148,7 @@ move_pbs_logs <- function(path=".", jobfile="pbs_jobs.csv",
     stop("output files do not exist failed")
   }
 
-  to_move_info$dest <- file.path("output",
+  to_move_info$dest <- file.path("experiments", "output",
                                  to_move_info$experiment,
                                  to_move_info$task, "pbs")
   to_move_info$f_err <- file.path(to_move_info$dest,
