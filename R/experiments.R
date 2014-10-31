@@ -31,10 +31,10 @@ load_output1 <- function(experiment, task, id) {
 }
 
 get_task <- function(experiment, task, yml) {
-  if (!(experiment %in% names(yml))) {
-    stop("Did not find experiment within overall data")
-  }
   yml_exp <- get_experiment(experiment, yml)
+  if (!(task %in% names(yml_exp$tasks))) {
+    stop("Did not find task within experiment")
+  }
   ret <- yml_exp$tasks[[task]]
   ret$path <- task
   ret$experiment <- yml_exp
