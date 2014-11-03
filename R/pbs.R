@@ -155,6 +155,9 @@ move_pbs_logs <- function(path=".", jobfile="pbs_jobs.csv",
                                   paste0(to_move_info$id, ".err"))
   to_move_info$f_out <- file.path(to_move_info$dest,
                                   paste0(to_move_info$id, ".out"))
+  to_move_info$f_pbs <- pbs_filename(to_move_info$experiment,
+                                     to_move_info$task,
+                                     to_move_info$id)
 
   invisible(lapply(unique(to_move_info$dest), dir.create, FALSE, TRUE))
   for (i in seq_along(to_move)) {
@@ -165,5 +168,15 @@ move_pbs_logs <- function(path=".", jobfile="pbs_jobs.csv",
     }
     file.rename(file.path(path, to_move[i]),     to_move_info$f_err[i])
     file.rename(file.path(path, to_move_out[i]), to_move_info$f_out[i])
+    file.remove(file.path(path, to_move_info$f_pbs[i]))
   }
+}
+
+
+pbs_time <- function(days=1, hours=0, minutes=0) {
+  hours <- hours + days * 2
+  if (minutes > 59) {
+    stop()
+  }
+  sprintf("%2d:%2d:%d", hours, minutes, seconds)
 }
