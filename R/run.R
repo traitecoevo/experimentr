@@ -10,7 +10,11 @@ experimentr_options <- function() {
                 help="ID of the job to run"),
     make_option(c("-n", "--dry-run"), type="logical",
                 default=FALSE, dest="dry_run",
-                help="Dry run (don't actually run anything)"))
+                help="Dry run (don't actually run anything)"),
+   make_option(c("-b", "--backup"), type="logical",
+                default=FALSE, dest="backup",
+                help="Backup any existing output"))
+
 }
 
 ##' Run an experiment, from the command line.
@@ -29,6 +33,7 @@ main <- function(args=NULL) {
   task       <- args$task
   id         <- args$id
   dry_run    <- args$dry_run
+  backup    <- args$backup
   if (length(id) != 1L) {
     stop("Expected single id")
   }
@@ -36,7 +41,7 @@ main <- function(args=NULL) {
     options(error=traceback)
   }
 
-  run_task(experiment, task, id, dry_run=dry_run)
+  run_task(experiment, task, id, dry_run=dry_run, backup=backup)
 }
 
 ##' Run a task.  This is designed to run locally, rather than being
@@ -52,14 +57,13 @@ main <- function(args=NULL) {
 ##' \code{mc.preschedule=FALSE} and specify \code{mc.cores}.
 ##' @param dry_run Logical, indicating if we should \emph{actually}
 ##' run things.
-##' @param overwrite Should we delete existing output before running
-##' (preventing jobs that might have a resume capability).
+##' @backup Logical, backyp any existing output
 ##' @export
 run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
-                     dry_run=FALSE, overwrite=TRUE) {
+                     dry_run=FALSE, backup=FALSE) {
   message("Experiment: ", experiment)
   message("Task:       ", task)
-  
+
   dat <- yaml::yaml.load_file(experiments_filename())
   if (is.null(id)) {
     id <- ids(experiment)
@@ -71,9 +75,14 @@ run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
     env <- create_environment(experiment, task, dat)
 
     if (!dry_run) {
+
+      if(backup) {
       ## NOTE: These can easily get out-of-sync
-      backup(pars$filename, move=overwrite)
-      backup(pars$metaname, move=TRUE)
+        backup(pars$filename, move=TRUE)
+        backup(pars$metaname, move=TRUE)
+      }
+
+      ## TODO :overwrite option currently does nothing
       save_metadata(pars$metaname, experiment, dat, env)
       run(pars, env)
     }
