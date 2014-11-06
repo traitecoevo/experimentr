@@ -5,7 +5,7 @@
 \usage{
 launch_pbs(experiment, task, id = NULL, jobfile = "pbs_jobs.csv",
   email = getOption("experimentr.email"), walltime = "48:00:00",
-  queue = "normal", template = NULL, path = ".")
+  queue = "normal", template = NULL, path = ".", verbose = TRUE)
 }
 \arguments{
 \item{experiment}{Name of the experiment}
@@ -17,6 +17,18 @@ launch_pbs(experiment, task, id = NULL, jobfile = "pbs_jobs.csv",
 \item{jobfile}{Name of the file to store information associating
 pbs job id with experimentrs information.  This is used by
 \code{\link{move_pbs_logs}}.}
+
+\item{email}{Email address for PBS to use}
+
+\item{walltime}{Requested walltime (default two days)}
+
+\item{queue}{Name of the queue (default is "normal")}
+
+\item{template}{Template to build job file from (or NULL)}
+
+\item{path}{Path to make/submit PBS files from}
+
+\item{verbose}{Print name of PBS file during submission?}
 }
 \description{
 Launch jobs via qsub, saving information about PBS job numbers

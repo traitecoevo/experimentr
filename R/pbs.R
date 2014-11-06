@@ -48,7 +48,7 @@ copy_runner <- function(dest="run_experiment.R") {
   file.copy(src, dest, overwrite=TRUE)
 }
 
-qsub <- function(pbs_filenames, echo_only=TRUE) {
+qsub <- function(pbs_filenames, echo_only=TRUE, verbose=TRUE) {
   if (echo_only) {
     system2 <- function(command, args, ...) {
       message(paste(command, args, ...))
@@ -56,8 +56,12 @@ qsub <- function(pbs_filenames, echo_only=TRUE) {
   }
   pbs_ids <- vector("list", length=length(pbs_filenames))
   for (i in seq_along(pbs_filenames)) {
+    if (verbose) {
+      message("Launching ", pbs_filenames[[i]])
+    }
     pbs_ids[[i]] <- system2("qsub", pbs_filenames[[i]], stdout=TRUE)
   }
+  ## TODO: Throw an error if the job was refused.
   invisible(pbs_ids)
 }
 
@@ -69,12 +73,18 @@ qsub <- function(pbs_filenames, echo_only=TRUE) {
 ##' @param jobfile Name of the file to store information associating
 ##' pbs job id with experimentrs information.  This is used by
 ##' \code{\link{move_pbs_logs}}.
+##' @param email Email address for PBS to use
+##' @param walltime Requested walltime (default two days)
+##' @param queue Name of the queue (default is "normal")
+##' @param template Template to build job file from (or NULL)
+##' @param path Path to make/submit PBS files from
+##' @param verbose Print name of PBS file during submission?
 ##' @export
 launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv",
                       email=getOption("experimentr.email"),
                       walltime="48:00:00", queue="normal",
                       template=NULL,
-                      path=".") {
+                      path=".", verbose=TRUE) {
   if (is.null(id)) {
     id <- ids(experiment)
   }
@@ -87,7 +97,7 @@ launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv",
                          queue=queue,
                          template=template,
                          path=path)
-  res <- sapply(files, qsub, echo_only=FALSE)
+  res <- sapply(files, qsub, echo_only=FALSE, verbose=verbose)
   dat <- process_pbs(experiment, task, id, res)
   append_jobfile(dat, jobfile)
   invisible(res)
