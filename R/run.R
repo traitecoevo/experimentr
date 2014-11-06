@@ -57,7 +57,7 @@ main <- function(args=NULL) {
 ##' \code{mc.preschedule=FALSE} and specify \code{mc.cores}.
 ##' @param dry_run Logical, indicating if we should \emph{actually}
 ##' run things.
-##' @backup Logical, backyp any existing output
+##' @param backup Logical, backyp any existing output
 ##' @export
 run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
                      dry_run=FALSE, backup=FALSE) {

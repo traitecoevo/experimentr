@@ -173,10 +173,11 @@ move_pbs_logs <- function(path=".", jobfile="pbs_jobs.csv",
 }
 
 
+##' @export
 pbs_time <- function(days=1, hours=0, minutes=0) {
-  hours <- hours + days * 2
+  hours <- hours + round(days * 24)
   if (minutes > 59) {
-    stop()
+    stop("Invalid value for minutes")
   }
-  sprintf("%2d:%2d:%d", hours, minutes, seconds)
+  sprintf("%02d:%02d:00", hours, minutes)
 }
