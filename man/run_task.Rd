@@ -4,7 +4,7 @@
 \title{Run a task}
 \usage{
 run_task(experiment, task, id = NULL, parallel = TRUE, ...,
-  dry_run = FALSE, backup = FALSE)
+  dry_run = FALSE, backup = FALSE, capture_output = NULL)
 }
 \arguments{
 \item{experiment}{Name of the experiment}
@@ -23,7 +23,11 @@ particular, it will probably be useful to set
 \item{dry_run}{Logical, indicating if we should \emph{actually}
 run things.}
 
-\item{backup}{Logical, backyp any existing output}
+\item{backup}{Logical, backup any existing output}
+
+\item{capture_output}{Should we capture output?  By default this
+happens if running noninteractively, or if more than one id is
+used.}
 }
 \description{
 Run a task.  This is designed to run locally, rather than being

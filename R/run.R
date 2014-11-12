@@ -57,10 +57,13 @@ main <- function(args=NULL) {
 ##' \code{mc.preschedule=FALSE} and specify \code{mc.cores}.
 ##' @param dry_run Logical, indicating if we should \emph{actually}
 ##' run things.
-##' @param backup Logical, backyp any existing output
+##' @param backup Logical, backup any existing output
+##' @param capture_output Should we capture output?  By default this
+##' happens if running noninteractively, or if more than one id is
+##' used.
 ##' @export
 run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
-                     dry_run=FALSE, backup=FALSE) {
+                     dry_run=FALSE, backup=FALSE, capture_output=NULL) {
   message("Experiment: ", experiment)
   message("Task:       ", task)
 
@@ -70,21 +73,23 @@ run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
   }
   message("Id:         ", paste(id, collapse=", "))
 
+  if (is.null(capture_output)) {
+    capture_output <- !interactive() || (length(id) > 1L)
+  }
+
   f <- function(id) {
     pars <- load_task_info(experiment, task, id, dat)
     env <- create_environment(experiment, task, dat)
 
     if (!dry_run) {
 
-      if(backup) {
-      ## NOTE: These can easily get out-of-sync
+      if (backup) {
         backup(pars$filename, move=TRUE)
         backup(pars$metaname, move=TRUE)
       }
 
-      ## TODO :overwrite option currently does nothing
       save_metadata(pars$metaname, experiment, dat, env)
-      run(pars, env)
+      run(pars, env, capture_output)
     }
   }
   if (parallel && length(id) > 1L) {
@@ -95,8 +100,8 @@ run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
   invisible(NULL)
 }
 
-run <- function(pars, env, capture_all_output=!interactive()) {
-  if (capture_all_output) {
+run <- function(pars, env, capture_output=!interactive()) {
+  if (capture_output) {
     message("Diverting messages to ", pars$logfile)
     dir.create(dirname(pars$logfile), showWarnings=FALSE, recursive=TRUE)
     con <- file(pars$logfile, open="wt")
