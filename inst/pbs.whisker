@@ -18,8 +18,8 @@
 #PBS -l walltime={{{walltime}}}
 
 ### Set the number of cores (cpus) and memory needed for job
-#PBS -l ncpus=1
-#PBS -l mem=1GB
+#PBS -l ncpus={{{ncpus}}}
+#PBS -l mem={{{memory}}}
 
 ### Start the job in the directory from which it was submitted.
 #PBS -l wd

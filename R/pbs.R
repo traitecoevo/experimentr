@@ -14,6 +14,7 @@
 make_pbs_file <- function(experiment, task, id=NULL,
                           email=getOption("experimentr.email"),
                           walltime="48:00:00", queue="normal",
+                          memory="1GB", ncpus="1",
                           template=NULL,
                           path=".") {
   if (is.null(template)) {
@@ -28,14 +29,14 @@ make_pbs_file <- function(experiment, task, id=NULL,
     id <- ids(experiment)
   }
 
-  f <- function(experiment, task, id, walltime, email, queue) {
+  f <- function(experiment, task, id, walltime, email, queue, memory, ncpus) {
     str <- whisker::whisker.render(template)
     filename <- file.path(path, pbs_filename(experiment, task, id))
     writeLines(str, filename)
     filename
   }
   invisible(sapply(id, function(x)
-                   f(experiment, task, x, walltime, email, queue)))
+                   f(experiment, task, x, walltime, email, queue, memory, ncpus)))
 }
 
 ##' Copy a helper script that runs a parameter set from the experiment.
@@ -83,6 +84,7 @@ qsub <- function(pbs_filenames, echo_only=TRUE, verbose=TRUE) {
 launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv",
                       email=getOption("experimentr.email"),
                       walltime="48:00:00", queue="normal",
+                      memory="1GB", ncpus="1",
                       template=NULL,
                       path=".", verbose=TRUE) {
   if (is.null(id)) {
@@ -95,6 +97,8 @@ launch_pbs <- function(experiment, task, id=NULL, jobfile="pbs_jobs.csv",
                          email=email,
                          walltime=walltime,
                          queue=queue,
+                         memory=memory,
+                         ncpus=ncpus,
                          template=template,
                          path=path)
   res <- sapply(files, qsub, echo_only=FALSE, verbose=verbose)
