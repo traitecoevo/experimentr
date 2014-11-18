@@ -3,13 +3,17 @@
 \alias{add_parameters}
 \title{Add parameters to an experiment}
 \usage{
-add_parameters(experiment, pars)
+add_parameters(experiment, pars, eps = 1e-06)
 }
 \arguments{
 \item{experiment}{Name of the experiment}
 
 \item{pars}{data.frame of the parameters.  Column names must match
 the existing parameters}
+
+\item{eps}{Distance to check if parameters are duplicates of
+existing.  Only works for parmeter sets that are all
+integer/numeric for now.}
 }
 \description{
 Add parameters to an existing experiment

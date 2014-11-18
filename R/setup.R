@@ -69,8 +69,11 @@ setup_experiment <- function(path, pars, packages=NULL, scripts=NULL,
 ##' @param experiment Name of the experiment
 ##' @param pars data.frame of the parameters.  Column names must match
 ##' the existing parameters
+##' @param eps Distance to check if parameters are duplicates of
+##' existing.  Only works for parmeter sets that are all
+##' integer/numeric for now.
 ##' @export
-add_parameters <- function(experiment, pars) {
+add_parameters <- function(experiment, pars, eps=1e-6) {
   experiments_file <- experiments_filename()
   yml <- yaml::yaml.load_file(experiments_file)
   exp <- get_experiment(experiment, yml)
@@ -80,6 +83,26 @@ add_parameters <- function(experiment, pars) {
   if (!identical(names(pars), cols)) {
     stop("New parameters must have column names: ",
          paste(sprintf('"%s"', cols), collapse=", "))
+  }
+
+  is_num <- sapply(pars_existing[cols], is.numeric) # also counts integer
+  if (all(is_num)) {
+    dist_closest <- function(pt, A) {
+      sqrt(min(colSums((t(A) - drop(pt))^2)))
+    }
+    m_pars <- as.matrix(pars)
+    m_pars_existing <- as.matrix(pars_existing[cols])
+    d_pars <- apply(m_pars, 1, dist_closest, m_pars_existing)
+    too_close <- d_pars < eps
+    if (all(too_close)) {
+      stop("All parameters too close to existing, may be duplicates")
+    } else if (any(too_close)) {
+      stop("Some parameters too close to existing, may be duplicates:\n",
+           paste(which(too_close), collapse=", "))
+    }
+  } else {
+    warning("Skipping too-close check: please implement", immediate.=TRUE)
+
   }
   id_start <- pars_existing$id[nrow(pars_existing)] + 1
   id_new <- seq(id_start, by=1, length=nrow(pars))
