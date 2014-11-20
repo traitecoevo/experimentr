@@ -52,18 +52,22 @@ main <- function(args=NULL) {
 ##' @param id Id of the jobs to run.  If omitted, all ids for this
 ##' experiment will be run.
 ##' @param parallel Run in parallel using \code{parallel::mclapply}?
-##' @param ... Arguments passed through to \code{mclapply}.  In
-##' particular, it will probably be useful to set
-##' \code{mc.preschedule=FALSE} and specify \code{mc.cores}.
+##' @param ... Arguments passed through to \code{mclapply}.
 ##' @param dry_run Logical, indicating if we should \emph{actually}
 ##' run things.
 ##' @param backup Logical, backup any existing output
 ##' @param capture_output Should we capture output?  By default this
 ##' happens if running noninteractively, or if more than one id is
 ##' used.
+##' @param preschedule If running in parallel, should we preallocate
+##' jobs?  If your jobs are at all computationally intensive, setting
+##' this to FALSE (the default) will allow better use of resources.
+##' For very quick jobs, the overhead involved here may outweigh
+##' savings, but that's unlikely if you're using experimentr...
 ##' @export
 run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
-                     dry_run=FALSE, backup=FALSE, capture_output=NULL) {
+                     dry_run=FALSE, backup=FALSE, capture_output=NULL,
+                     preschedule=FALSE) {
   message("Experiment: ", experiment)
   message("Task:       ", task)
 
@@ -93,7 +97,7 @@ run_task <- function(experiment, task, id=NULL, parallel=TRUE, ...,
     }
   }
   if (parallel && length(id) > 1L) {
-    parallel::mclapply(id, f, ...)
+    parallel::mclapply(id, f, ..., mc.preschedule=preschedule)
   } else {
     lapply(id, f)
   }

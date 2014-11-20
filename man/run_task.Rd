@@ -4,7 +4,8 @@
 \title{Run a task}
 \usage{
 run_task(experiment, task, id = NULL, parallel = TRUE, ...,
-  dry_run = FALSE, backup = FALSE, capture_output = NULL)
+  dry_run = FALSE, backup = FALSE, capture_output = NULL,
+  preschedule = FALSE)
 }
 \arguments{
 \item{experiment}{Name of the experiment}
@@ -16,9 +17,7 @@ experiment will be run.}
 
 \item{parallel}{Run in parallel using \code{parallel::mclapply}?}
 
-\item{...}{Arguments passed through to \code{mclapply}.  In
-particular, it will probably be useful to set
-\code{mc.preschedule=FALSE} and specify \code{mc.cores}.}
+\item{...}{Arguments passed through to \code{mclapply}.}
 
 \item{dry_run}{Logical, indicating if we should \emph{actually}
 run things.}
@@ -28,6 +27,12 @@ run things.}
 \item{capture_output}{Should we capture output?  By default this
 happens if running noninteractively, or if more than one id is
 used.}
+
+\item{preschedule}{If running in parallel, should we preallocate
+jobs?  If your jobs are at all computationally intensive, setting
+this to FALSE (the default) will allow better use of resources.
+For very quick jobs, the overhead involved here may outweigh
+savings, but that's unlikely if you're using experimentr...}
 }
 \description{
 Run a task.  This is designed to run locally, rather than being
