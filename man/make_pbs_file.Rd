@@ -5,7 +5,8 @@
 \usage{
 make_pbs_file(experiment, task, id = NULL,
   email = getOption("experimentr.email"), walltime = "48:00:00",
-  queue = "normal", template = NULL, path = ".")
+  queue = "normal", memory = "1GB", ncpus = "1", template = NULL,
+  path = ".")
 }
 \arguments{
 \item{experiment}{Name of the experiment}
@@ -19,6 +20,10 @@ make_pbs_file(experiment, task, id = NULL,
 \item{walltime}{Requested walltime}
 
 \item{queue}{Name of the queue to use}
+
+\item{memory}{Memory requested}
+
+\item{ncpus}{Number of cpus requested}
 
 \item{template}{Contents of a whisker template, or NULL to use the
 default.}

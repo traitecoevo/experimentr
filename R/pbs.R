@@ -7,6 +7,8 @@
 ##' @param email Email to send updates to
 ##' @param walltime Requested walltime
 ##' @param queue Name of the queue to use
+##' @param memory Memory requested
+##' @param ncpus Number of cpus requested
 ##' @param template Contents of a whisker template, or NULL to use the
 ##' default.
 ##' @param path Path to write the pbs file to.
@@ -77,6 +79,8 @@ qsub <- function(pbs_filenames, echo_only=TRUE, verbose=TRUE) {
 ##' @param email Email address for PBS to use
 ##' @param walltime Requested walltime (default two days)
 ##' @param queue Name of the queue (default is "normal")
+##' @param memory Memory requested
+##' @param ncpus Number of cpus requested
 ##' @param template Template to build job file from (or NULL)
 ##' @param path Path to make/submit PBS files from
 ##' @param verbose Print name of PBS file during submission?
@@ -187,6 +191,12 @@ move_pbs_logs <- function(path=".", jobfile="pbs_jobs.csv",
 }
 
 
+##' Generate a suitable time string for pbs
+##' @title Generate pbs time string
+##' @param days Number of days
+##' @param hours Number of hours
+##' @param minutes Number of minutes (less than 60)
+##' @author Rich FitzJohn
 ##' @export
 pbs_time <- function(days=1, hours=0, minutes=0) {
   hours <- hours + round(days * 24)

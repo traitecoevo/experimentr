@@ -5,7 +5,8 @@
 \usage{
 launch_pbs(experiment, task, id = NULL, jobfile = "pbs_jobs.csv",
   email = getOption("experimentr.email"), walltime = "48:00:00",
-  queue = "normal", template = NULL, path = ".", verbose = TRUE)
+  queue = "normal", memory = "1GB", ncpus = "1", template = NULL,
+  path = ".", verbose = TRUE)
 }
 \arguments{
 \item{experiment}{Name of the experiment}
@@ -23,6 +24,10 @@ pbs job id with experimentrs information.  This is used by
 \item{walltime}{Requested walltime (default two days)}
 
 \item{queue}{Name of the queue (default is "normal")}
+
+\item{memory}{Memory requested}
+
+\item{ncpus}{Number of cpus requested}
 
 \item{template}{Template to build job file from (or NULL)}
 
