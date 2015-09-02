@@ -57,7 +57,7 @@ qsub <- function(pbs_filenames, echo_only=TRUE, verbose=TRUE) {
       message(paste(command, args, ...))
     }
   }
-  pbs_ids <- vector("list", length=length(pbs_filenames))
+  pbs_ids <- vector("list", length.out=length(pbs_filenames))
   for (i in seq_along(pbs_filenames)) {
     if (verbose) {
       message("Launching ", pbs_filenames[[i]])

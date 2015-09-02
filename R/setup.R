@@ -105,7 +105,7 @@ add_parameters <- function(experiment, pars, eps=1e-6) {
 
   }
   id_start <- pars_existing$id[nrow(pars_existing)] + 1
-  id_new <- seq(id_start, by=1, length=nrow(pars))
+  id_new <- seq(id_start, by=1, length.out=nrow(pars))
   pars_with_id <- cbind(id=id_new, pars)
   res <- rbind(pars_existing, pars_with_id)
   write.csv(res, parameters_csv_name(experiment), row.names=FALSE)
