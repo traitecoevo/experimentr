@@ -1,8 +1,3 @@
-if (interactive()) {
-  devtools::load_all("../../")
-  library(testthat)
-}
-
 context("experimentr")
 
 test_that("Simple dry run", {
